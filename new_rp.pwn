@@ -4286,7 +4286,8 @@ stock ShowStats(playerid, targetid, type)
 
 stock ShowPlayerMenu(targetid, playerid)
 {
-	if(playerid == targetid) return OnPlayerCommandText(playerid, "/mn");
+	if(playerid == targetid) return format(glstr,sizeof(glstr), "/mn");
+	CallLocalFunction(" OnPlayerCommandText ", "is", playerid, glstr);
 	format(glstr,sizeof(glstr), "{FFFFFF}%s [%d]", Name(targetid), targetid);
 	if(PI[targetid][AFK] > 3) strcat(glstr, " {00FF00}Отошёл");
 	if(PI[playerid][Admin] >= 10)
@@ -9785,7 +9786,8 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		if(emptyMessage(params)) return SendClientMessage(playerid, COLOR_SYSTEM, "/и [ID]");
 		new plid;
 		sscanf(params, "d", plid);
-		if(playerid == plid) return OnPlayerCommandText(playerid, "/mn");
+		if(playerid == plid) return format(glstr,sizeof(glstr), "/mn");
+		CallLocalFunction(" OnPlayerCommandText ", "is", playerid, glstr);
 		SetPVarInt(playerid, "ClickedPlayer", plid);
 		if(!InGame(plid)) return SendClientMessage(playerid, COLOR_SYSTEM, "Такого игрока нет");
 		ShowPlayerMenu(plid, playerid);
