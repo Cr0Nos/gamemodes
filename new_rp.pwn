@@ -46,7 +46,7 @@
 #define hostname	"Georgia Role Play"
 
 #define NICK_COST 			5.00
-#define CASH_COST 		2000
+#define CASH_COST 		3000
 
 // Players Move Speed
 #define MOVE_SPEED              100.0
