@@ -93,7 +93,7 @@ new O[SavedEnums];
 
 enum {
 	MN_admin,MN_stats, MN_gps, MN_options, MN_report, MN_donate, MN_inf, MN_heal, MN_frac, MN_phone, MN_phone_cont, MN_phone_112, MN_phone_112_02, MN_phone_112_03, MN_phone_serv_taxi, MN_phone_serv, MN_phone_radio, MN_phone_radio_LS, MN_phone_radio_SF, MN_phone_radio_LV, MN_phone_radio_OFF, MN_phone_selfie,
-	PMN_admin, PMN_spec, PMN_stats, PMN_passport, PMN_money, PMN_report, PMN_eject, PMN_frac, PMN_statsex,
+	PMN_admin, PMN_spec, PMN_stats, PMN_passport, PMN_money, PMN_report, PMN_eject, PMN_frac, PMN_statsex,PMN_show,PMN_skill,
 	FPMN_heal1,FPMN_heal2,FPMN_heal3,FPMN_arest,FPMN_wanted1,FPMN_wanted2,FPMN_disDlic,FPMN_bHand1,FPMN_bHand2,FPMN_inCar1,FPMN_inCar2,FPMN_jail,
 	FPMN_iView,FPMN_Sex,FPMN_Form,FPMN_invite,FPMN_uninvite,FPMN_Rank,FPMN_gRank,
 	H_buy, H_sell, H_rent, H_unrent, H_obuy, H_rentcost, H_safe, H_unlock, H_lock, H_label, H_unsell, H_tosell,
@@ -150,6 +150,7 @@ enum {
 			P_MENU_FACTION_WANTED,
 			P_MENU_FACTION_INVITE,
 			P_MENU_FACTION_IVIEW,
+		P_MENU_SHOW,
 	P_MENU_ADMIN,
 		P_MENU_ADMIN_PEN,
 			P_MENU_ADM_pen, P_MENU_ADM_pen_mute, P_MENU_ADM_pen_mutecmd, P_MENU_ADM_pen_jail, P_MENU_ADM_pen_cheaters, P_MENU_ADM_pen_kick, P_MENU_ADM_pen_ban, P_MENU_ADM_pen_pban, P_MENU_ADM_pen_report,
@@ -389,9 +390,9 @@ new
 	PlayerText:SpeedCarLabel[PLAYERS],
 	PlayerText:SpeedCar[PLAYERS],
 
-	PlayerText:MenuBG[PLAYERS],
-	PlayerText:MenuButton[PLAYERS][23],
-	MenuButtonModel[PLAYERS][23],
+	PlayerText:MenuButtonPanel[PLAYERS],
+	PlayerText:MenuButton[PLAYERS][27],
+	MenuButtonModel[PLAYERS][27],
 	
 	PlayerText:S_Joystick[PLAYERS],
 	PlayerText:S_UP[PLAYERS],
@@ -1704,7 +1705,7 @@ stock ShowBoxMenu(playerid, items)
 {
 	SetPVarInt(playerid, "BoxMenuItems", items);
 	SelectTextDraw(playerid, 0xFFFFFF50);
-	PlayerTextDrawShow(playerid, MenuBG[playerid]);
+	PlayerTextDrawShow(playerid, MenuButtonPanel[playerid]);
 	PlayerTextDrawShow(playerid, MenuButton[playerid][0]);
 	for(new i=1;i<items+1;i++)
 	{
@@ -1715,7 +1716,7 @@ stock ShowBoxMenu(playerid, items)
 
 stock HideBoxMenu(playerid)
 {
-	PlayerTextDrawHide(playerid, MenuBG[playerid]);
+	PlayerTextDrawHide(playerid, MenuButtonPanel[playerid]);
 	PlayerTextDrawHide(playerid, MenuButton[playerid][0]);
 	for(new i=1;i<=GetPVarInt(playerid, "BoxMenuItems");i++)
 	{
@@ -2390,6 +2391,13 @@ stock ShowMenu(playerid, menuid)
 				ShowPlayerDList(playerid, D_FACTION, "{FFFFFF}Фракция", "Выбрать", "Назад");
 			} else SendClientMessage(playerid, COLOR_SYSTEM, "Ты не состоишь во фракции");
 		}
+		case P_MENU_SHOW:
+		{
+			AddDListItem(playerid, "Паспорт", PMN_passport);
+			AddDListItem(playerid, "Навыки оружия", PMN_skill);
+			ShowPlayerDList(playerid, P_MENU_SHOW, "{FFFFFF}Показать", "Выбрать", "Назад");
+		}
+
 		case P_MENU_FACTION:
 		{
 			Clear_DList(playerid);
@@ -2720,30 +2728,8 @@ stock DestroyPlayerTD(playerid)
 	PlayerTextDrawDestroy(playerid, S_LEFT[playerid]);
 	PlayerTextDrawDestroy(playerid, S_RIGHT[playerid]);
 	PlayerTextDrawDestroy(playerid, S_BACK[playerid]);
-	PlayerTextDrawDestroy(playerid, MenuBG[playerid]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][0]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][1]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][2]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][3]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][4]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][5]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][6]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][7]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][8]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][9]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][10]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][11]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][12]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][13]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][14]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][15]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][16]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][17]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][18]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][19]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][20]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][21]);
-	PlayerTextDrawDestroy(playerid, MenuButton[playerid][22]);	
+	PlayerTextDrawDestroy(playerid, MenuButtonPanel[playerid]);
+	for(new i=0; i<=26; i++) PlayerTextDrawDestroy(playerid, MenuButton[playerid][i]);	
 	PlayerTextDrawDestroy(playerid, NextCar[playerid]);
 	PlayerTextDrawDestroy(playerid, PrevCar[playerid]);
 	PlayerTextDrawDestroy(playerid, NameCar[playerid]);
@@ -2986,345 +2972,41 @@ stock LoadPlayerTD(playerid)
 	PlayerTextDrawSetSelectable(playerid, S_BACK[playerid], true);
 	PlayerTextDrawSetPreviewModel(playerid, S_BACK[playerid], 19131);
 	PlayerTextDrawSetPreviewRot(playerid, S_BACK[playerid], 0.000000, 0.000000, 90.000000, 1.000000);
+
+	MenuButtonPanel[playerid] = CreatePlayerTextDraw(playerid, 626.070312, 164.250000, "usebox");
+	PlayerTextDrawLetterSize(playerid, MenuButtonPanel[playerid], 0.000000, 28.720369);
+	PlayerTextDrawTextSize(playerid, MenuButtonPanel[playerid], 11.118595, 0.000000);
+	PlayerTextDrawAlignment(playerid, MenuButtonPanel[playerid], 1);
+	PlayerTextDrawColor(playerid, MenuButtonPanel[playerid], 0);
+	PlayerTextDrawUseBox(playerid, MenuButtonPanel[playerid], true);
+	PlayerTextDrawBoxColor(playerid, MenuButtonPanel[playerid], 60);
+	PlayerTextDrawSetShadow(playerid, MenuButtonPanel[playerid], 0);
+	PlayerTextDrawSetOutline(playerid, MenuButtonPanel[playerid], 0);
+	PlayerTextDrawFont(playerid, MenuButtonPanel[playerid], 0);
 	
-	MenuButton[playerid][0] = CreatePlayerTextDraw(playerid, 542.000000, 361.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][0], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][0], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][0], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][0], 16732415);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][0], 1);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][0], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][0], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][0], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][0], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][0], 19133);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][0], 0.000000, 45.000000, 90.000000, 0.800000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][0], 1);
-
-	MenuButton[playerid][1] = CreatePlayerTextDraw(playerid, 31.000000, 215.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][1], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][1], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][1], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][1], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][1], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][1], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][1], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][1], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][1], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][1], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][1], 0);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][1], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][1], 1);
-
-	MenuButton[playerid][2] = CreatePlayerTextDraw(playerid, 104.000000, 215.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][2], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][2], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][2], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][2], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][2], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][2], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][2], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][2], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][2], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][2], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][2], 0);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][2], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][2], 1);
-	
-	MenuButton[playerid][3] = CreatePlayerTextDraw(playerid,177.000000, 215.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][3], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][3], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][3], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][3], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][3], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][3], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][3], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][3], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][3], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][3], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][3], 0);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][3], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][3], 1);
-
-	MenuButton[playerid][4] = CreatePlayerTextDraw(playerid,250.000000, 215.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][4], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][4], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][4], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][4], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][4], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][4], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][4], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][4], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][4], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][4], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][4], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][4], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][4], 1);
-
-	MenuButton[playerid][5] = CreatePlayerTextDraw(playerid,323.000000, 215.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][5], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][5], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][5], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][5], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][5], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][5], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][5], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][5], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][5], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][5], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][5], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][5], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][5], 1);
-
-	MenuButton[playerid][6] = CreatePlayerTextDraw(playerid,396.000000, 215.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][6], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][6], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][6], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][6], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][6], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][6], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][6], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][6], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][6], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][6], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][6], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][6], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][6], 1);
-
-	MenuButton[playerid][7] = CreatePlayerTextDraw(playerid,469.000000, 215.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][7], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][7], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][7], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][7], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][7], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][7], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][7], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][7], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][7], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][7], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][7], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][7], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][7], 1);
-
-	MenuButton[playerid][8] = CreatePlayerTextDraw(playerid,542.000000, 215.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][8], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][8], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][8], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][8], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][8], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][8], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][8], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][8], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][8], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][8], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][8], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][8], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][8], 1);
-
-	MenuButton[playerid][9] = CreatePlayerTextDraw(playerid,31.000000, 288.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][9], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][9], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][9], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][9], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][9], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][9], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][9], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][9], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][9], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][9], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][9], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][9], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][9], 1);
-
-	MenuButton[playerid][10] = CreatePlayerTextDraw(playerid,104.000000, 288.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][10], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][10], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][10], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][10], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][10], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][10], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][10], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][10], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][10], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][10], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][10], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][10], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][10], 1);
-
-	MenuButton[playerid][11] = CreatePlayerTextDraw(playerid,177.000000, 288.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][11], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][11], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][11], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][11], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][11], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][11], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][11], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][11], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][11], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][11], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][11], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][11], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][11], 1);
-
-	MenuButton[playerid][12] = CreatePlayerTextDraw(playerid,250.000000, 288.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][12], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][12], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][12], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][12], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][12], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][12], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][12], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][12], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][12], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][12], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][12], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][12], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][12], 1);
-
-	MenuButton[playerid][13] = CreatePlayerTextDraw(playerid,323.000000, 288.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][13], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][13], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][13], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][13], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][13], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][13], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][13], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][13], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][13], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][13], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][13], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][13], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][13], 1);
-
-	MenuButton[playerid][14] = CreatePlayerTextDraw(playerid,396.000000, 288.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][14], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][14], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][14], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][14], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][14], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][14], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][14], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][14], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][14], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][14], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][14], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][14], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][14], 1);
-
-	MenuButton[playerid][15] = CreatePlayerTextDraw(playerid,469.000000, 288.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][15], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][15], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][15], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][15], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][15], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][15], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][15], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][15], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][15], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][15], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][15], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][15], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][15], 1);
-
-	MenuButton[playerid][16] = CreatePlayerTextDraw(playerid,542.000000, 288.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][16], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][16], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][16], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][16], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][16], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][16], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][16], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][16], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][16], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][16], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][16], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][16], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][16], 1);
-
-	MenuButton[playerid][17] = CreatePlayerTextDraw(playerid,31.000000, 361.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][17], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][17], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][17], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][17], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][17], 0);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][17], 1);
-	PlayerTextDrawSetShadow(playerid, MenuButton[playerid][17], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][17], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][17], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][17], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][17], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][17], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][17], 1);
-
-	MenuButton[playerid][18] = CreatePlayerTextDraw(playerid,104.000000, 361.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][18], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][18], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][18], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][18], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][18], 1);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][18], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][18], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][18], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][18], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][18], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][18], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][18], 1);
-
-	MenuButton[playerid][19] = CreatePlayerTextDraw(playerid,177.000000, 361.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][19], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][19], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][19], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][19], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][19], 1);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][19], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][19], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][19], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][19], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][19], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][19], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][19], 1);
-
-	MenuButton[playerid][20] = CreatePlayerTextDraw(playerid,250.000000, 361.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][20], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][20], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][20], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][20], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][20], 1);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][20], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][20], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][20], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][20], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][20], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][20], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][20], 1);
-
-	MenuButton[playerid][21] = CreatePlayerTextDraw(playerid,323.000000, 361.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][21], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][21], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][21], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][21], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][21], 1);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][21], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][21], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][21], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][21], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][21], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][21], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][21], 1);
-
-	MenuButton[playerid][22] = CreatePlayerTextDraw(playerid,396.000000, 361.000000, " ");
-	PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][22], 80);
-	PlayerTextDrawFont(playerid, MenuButton[playerid][22], 5);
-	PlayerTextDrawLetterSize(playerid, MenuButton[playerid][22], 0.090000, -0.100000);
-	PlayerTextDrawColor(playerid, MenuButton[playerid][22], -1);
-	PlayerTextDrawSetOutline(playerid, MenuButton[playerid][22], 1);
-	PlayerTextDrawSetProportional(playerid, MenuButton[playerid][22], 1);
-	PlayerTextDrawUseBox(playerid, MenuButton[playerid][22], 1);
-	PlayerTextDrawBoxColor(playerid, MenuButton[playerid][22], 80);
-	PlayerTextDrawTextSize(playerid, MenuButton[playerid][22], 70.000000, 70.000000);
-	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][22], 411);
-	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][22], -16.000000, 0.000000, -55.000000, 1.000000);
-	PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][22], 1);
+	new Float: menu_x, Float: menu_y;
+	for(new i; i <= 26; i++)
+	{
+		MenuButton[playerid][i] = CreatePlayerTextDraw(playerid, 40.000000 + menu_x, 191.000000 + menu_y, " ");
+		PlayerTextDrawLetterSize(playerid, MenuButton[playerid][i], 0.500000, 1.600000);
+		PlayerTextDrawTextSize(playerid, MenuButton[playerid][i], 61.000000, 71.000000);
+		PlayerTextDrawAlignment(playerid, MenuButton[playerid][i], 1);
+		PlayerTextDrawColor(playerid, MenuButton[playerid][i], -1);
+		PlayerTextDrawUseBox(playerid, MenuButton[playerid][i], true);
+		PlayerTextDrawBoxColor(playerid, MenuButton[playerid][i], 0);
+		PlayerTextDrawSetShadow(playerid, MenuButton[playerid][i], 0);
+		PlayerTextDrawSetOutline(playerid, MenuButton[playerid][i], 1);
+		PlayerTextDrawBackgroundColor(playerid, MenuButton[playerid][i], 60);
+		PlayerTextDrawFont(playerid, MenuButton[playerid][i], 5);
+		PlayerTextDrawSetProportional(playerid, MenuButton[playerid][i], 1);
+		PlayerTextDrawSetSelectable(playerid, MenuButton[playerid][i], true);
+		PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][i], 0);
+		PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][i], -16.000000, 0.000000, -55.000000, 1.000000);
+        menu_x += 62.000000;
+	    if(i == 8 || i == 17) menu_x = 0.000000, menu_y += 72.000000;
+	}
+	PlayerTextDrawSetPreviewModel(playerid, MenuButton[playerid][26], 19130);
+	PlayerTextDrawSetPreviewRot(playerid, MenuButton[playerid][26], -16.000000, 45.000000, 90.000000, 1.000000);
 	
 	NextCar[playerid] = CreatePlayerTextDraw(playerid, 390.000000, 360.000000, "right");
 	PlayerTextDrawLetterSize(playerid, NextCar[playerid], 0.449999, 1.600000);
@@ -4296,9 +3978,9 @@ stock ShowPlayerMenu(targetid, playerid)
 		AddDListItem(playerid, "Наблюдать", PMN_spec);
 		AddDListItem(playerid, "{00FF00}Статистика", PMN_stats);
 	}
-	if(PI[playerid][Passport] != 0) AddDListItem(playerid, "Показать паспорт", PMN_passport);
 	AddDListItem(playerid, "Дать денег", PMN_money);
 	AddDListItem(playerid, "Передать игроку донат", DON_pay);
+	AddDListItem(playerid, "Показать", PMN_show);
 	AddDListItem(playerid, "{FFFF00}Пожаловаться на игрока", PMN_report);
 	if(IsPlayerInAnyVehicle(playerid) && GetPlayerVehicleSeat(playerid) == 0) AddDListItem(playerid, "Выкинуть из машины", PMN_eject);
 	if(PI[playerid][Faction] != 0) AddDListItem(playerid, "Фракция", PMN_frac);
@@ -13023,11 +12705,6 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				new plid = GetPVarInt(playerid, "ClickedPlayer");
 				switch(DLItemID)
 				{
-			        case PMN_passport:
-					{
-					    if(!PlayerInRadius(playerid, plid, 2.0)) return SendClientMessage(playerid, COLOR_SYSTEM, "Игрок далеко");
-					    ShowPassport(playerid, plid);
-					}
 			        case PMN_money:
 			        {
 						format(glstr, sizeof(glstr), "{FFFFFF}Передача денег игроку %s [%d]", Name(plid), plid);
@@ -13046,6 +12723,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case PMN_spec: specPlayer(playerid, plid);
 					case PMN_stats: ShowStats(plid, playerid, 5);
 					case PMN_eject: RemovePlayerFromVehicle(plid);
+					case PMN_give: ShowMenu(playerid, P_MENU_SHOW);
 					case PMN_frac:
 					{
 						ShowMenu(playerid, P_MENU_FACTION);
@@ -13487,6 +13165,22 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			format(glstr, sizeof(glstr), "/лдр %d %d", GetPVarInt(playerid, "ClickedPlayer"), listitem);
 			OnPlayerCommandText(playerid, glstr);
+		}
+		case P_MENU_SHOW:
+		{
+		    new plid = GetPVarInt(playerid, "ClickedPlayer");
+		    if(response)
+		    {
+				switch(DLItemID)
+				{
+			        case PMN_passport:
+					{
+					    if(!PlayerInRadius(playerid, plid, 4.0)) return SendClientMessage(playerid, COLOR_SYSTEM, "Игрок далеко от тебя");
+					    if(PI[playerid][Passport] == 0) return SendClientMessage(playerid, COLOR_SYSTEM, "У тебя нет паспорта");
+					    ShowPassport(playerid, plid);
+					}
+				}
+		    } else ShowPlayerMenu(plid, playerid);
 		}
 		case P_MENU_FACTION:
 		{
